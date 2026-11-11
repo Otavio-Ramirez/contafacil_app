@@ -1,18 +1,29 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import { Tabs } from 'expo-router';
+import { ColorValue } from 'react-native';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import { Ionicons } from '@/components/ui';
+import { cores } from '@/theme';
 
-SplashScreen.preventAutoHideAsync();
+type Icone = keyof typeof Ionicons.glyphMap;
+const icone = (nome: Icone) =>
+  function TabIcon({ color, size }: { color: ColorValue; size: number }) {
+    return <Ionicons name={nome} size={size + 2} color={String(color)} />;
+  };
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function TabsLayout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: cores.primaria,
+        tabBarInactiveTintColor: cores.texto2,
+        tabBarLabelStyle: { fontSize: 12, fontWeight: '600' },
+        tabBarStyle: { height: 66, paddingTop: 6, paddingBottom: 8 },
+      }}>
+      <Tabs.Screen name="index" options={{ title: 'Início', tabBarIcon: icone('home-outline') }} />
+      <Tabs.Screen name="adicionar" options={{ title: 'Adicionar', tabBarIcon: icone('add-circle-outline') }} />
+      <Tabs.Screen name="historico" options={{ title: 'Histórico', tabBarIcon: icone('time-outline') }} />
+      <Tabs.Screen name="resumo" options={{ title: 'Resumo', tabBarIcon: icone('stats-chart-outline') }} />
+    </Tabs>
   );
 }
